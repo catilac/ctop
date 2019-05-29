@@ -13,5 +13,4 @@ void destroy_display();
 void print_error(const char* const);
 void render_processes(struct kinfo_proc *, int);
 
-
 #endif

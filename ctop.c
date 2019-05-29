@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
   init_display();
 
   if (sysctl(mib, 4, NULL, &count, NULL, 0) < 0) {
-		print_error("ERROR getting process COUNTS\n");
+    print_error("ERROR getting process COUNTS\n");
     return -1;
   }
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
   render_processes(processes, count);
 
-	destroy_display();
+  destroy_display();
 
   // free up processes
   free(processes);

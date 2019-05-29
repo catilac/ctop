@@ -7,18 +7,18 @@
 #include "display.h"
 
 void init_display() {
-	initscr();
+  initscr();
 }
 
 void destroy_display() {
-	endwin();
+  endwin();
 }
 
 void print_error(const char* const str) {
-	printw(str);
-	refresh();
-	getch();
-	endwin();
+  printw(str);
+  refresh();
+  getch();
+  endwin();
 }
 
 void render_processes(struct kinfo_proc *processes, int count) {
