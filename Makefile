@@ -11,3 +11,4 @@ display.o: display.c display.h
 
 clean:
 	rm ctop *.o
+	rm -r *.dSYM
