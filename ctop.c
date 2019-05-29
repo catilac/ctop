@@ -5,53 +5,40 @@
  * AUTHOR: Chirag Davé
  */
 
-#include <ncurses.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/sysctl.h>
 
-int main(int argc, char **argv)
-{
+#include "display.h"
 
+int main(int argc, char **argv) {
   int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0 };
   size_t count = 0;
   struct kinfo_proc *processes = NULL;
 
   // Init screen
-  initscr();
+  init_display();
 
   if (sysctl(mib, 4, NULL, &count, NULL, 0) < 0) {
-    printw("ERROR getting process COUNTS\n");
-    // TODO write an error handler for ncurses
-    refresh();
-    getch();
-    endwin();
+		print_error("ERROR getting process COUNTS\n");
     return -1;
   }
 
-  printw("PROCESS COUNT: %d\n", count);
 
+	// TODO - move this into its own module
   processes = (struct kinfo_proc *)malloc(sizeof(struct kinfo_proc) * count);
 
   if (sysctl(mib, 4, processes, &count, NULL, 0) < 0) {
-    printw("ERROR getting process DETAILS\n");
-    refresh();
-    getch();
-    endwin();
-
+    print_error("ERROR getting process DETAILS\n");
     // free up processes
     free(processes);
-
     return -1;
   }
 
-  for (size_t i = 0; i < 25; i++) {
-    printw("PROCESS: %s\n", processes[i].kp_proc.p_comm);
-  }
+  render_processes(processes, count);
 
-  // Wait for keyboard input and then quit
-  getch();
-  endwin();
+	destroy_display();
 
   // free up processes
   free(processes);
