@@ -2,9 +2,10 @@
 
 ## TODO
   [ ] Create an ncurses based lib for creating a dashboard
+    - needs to involve using WINDOW
+  [ ] Write datastructures for holding process information
+    - sortable by different keys
   [x] Write system calls to get list of processes
-  [ ] Write system calls to get information about those processes
-  [ ] Write datastructures for holding process information, for sorting
 
 ## What does this do?
 
