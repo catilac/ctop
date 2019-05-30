@@ -6,6 +6,7 @@
   [ ] Write datastructures for holding process information
     - sortable by different keys
   [x] Write system calls to get list of processes
+  [ ] Make sure we're shutting down gracefully
 
 ## What does this do?
 

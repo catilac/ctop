@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <sys/sysctl.h>
 
+#include <string.h>
+
 #include "display.h"
 
 int main(int argc, char **argv) {
@@ -19,9 +21,6 @@ int main(int argc, char **argv) {
 
   // Init screen
   init_display();
-
-  print_error("Hey here is an error!");
-  return -1;
 
   if (sysctl(mib, 4, NULL, &count, NULL, 0) < 0) {
     print_error("ERROR getting process COUNTS\n");

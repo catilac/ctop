@@ -3,6 +3,7 @@
  */
 
 #include <ncurses.h>
+#include <stdio.h>
 
 #include "display.h"
 
@@ -39,10 +40,38 @@ void print_error(const char* const str) {
 }
 
 void render_processes(struct kinfo_proc *processes, int count) {
-  printw("PROCESS COUNT: %d\n", count);
-  for (size_t i = 0; i < 25; i++) {
-    printw("PROCESS: %s\n", processes[i].kp_proc.p_comm);
+  int startx = 0;
+  int starty = 0;
+  int width = COLS;
+  int height = LINES;
+
+
+  WINDOW *proc_win = newwin(height, width, startx, starty);
+  box(proc_win, 0, 0);
+  wbkgd(proc_win, COLOR_PAIR(1));
+
+  /* TODO
+   *  [ ] user
+   *  [ ] virt
+   *  [ ] res
+   *  [ ] time
+   *  [ ] MEM%
+   *  [ ] stat fmt
+   */
+  mvwprintw(proc_win, 1, 1, "PID\tPRI\tNI\tS\tCPU%%\tCommand");
+
+  for (int i = 0; i < 25; i++) {
+    // fprintf(stderr, "TEST %d: %s\n", i, processes[i].kp_proc.p_comm);
+    mvwprintw(proc_win, i+2, 1, "%d\t%d\t%d\t%d\t%.1f\t%s",
+      processes[i].kp_proc.p_pid,
+      processes[i].kp_proc.p_priority,
+      processes[i].kp_proc.p_nice,
+      processes[i].kp_proc.p_stat,
+      processes[i].kp_proc.p_pctcpu,
+      processes[i].kp_proc.p_comm
+    );
   }
 
+  wrefresh(proc_win);
 	getch();
 }
