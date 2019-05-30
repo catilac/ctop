@@ -55,19 +55,18 @@ void render_processes(struct kinfo_proc *processes, int count) {
    *  [ ] virt
    *  [ ] res
    *  [ ] time
+   *  [ ] CPU%
    *  [ ] MEM%
    *  [ ] stat fmt
    */
-  mvwprintw(proc_win, 1, 1, "PID\tPRI\tNI\tS\tCPU%%\tCommand");
+  mvwprintw(proc_win, 1, 1, "PID\tPRI\tNI\tS\tCommand");
 
   for (int i = 0; i < 25; i++) {
-    // fprintf(stderr, "TEST %d: %s\n", i, processes[i].kp_proc.p_comm);
-    mvwprintw(proc_win, i+2, 1, "%d\t%d\t%d\t%d\t%.1f\t%s",
+    mvwprintw(proc_win, i+2, 1, "%d\t%d\t%d\t%d\t%s",
       processes[i].kp_proc.p_pid,
       processes[i].kp_proc.p_priority,
       processes[i].kp_proc.p_nice,
       processes[i].kp_proc.p_stat,
-      processes[i].kp_proc.p_pctcpu,
       processes[i].kp_proc.p_comm
     );
   }
