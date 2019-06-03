@@ -1,12 +1,17 @@
 # ctop - an htop clone
 
 ## TODO
-  [ ] Create an ncurses based lib for creating a dashboard
-    - needs to involve using WINDOW
+  [ ] Scrolling using arrow keys (or vim commands?)
+
   [ ] Write datastructures for holding process information
     - sortable by different keys
-  [x] Write system calls to get list of processes
+
   [ ] Make sure we're shutting down gracefully
+
+  [x] Write system calls to get list of processes
+
+  [x] Create an ncurses based lib for creating a dashboard
+    - needs to involve using WINDOW
 
 ## What does this do?
 

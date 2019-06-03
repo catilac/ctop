@@ -7,20 +7,28 @@
 
 #include "display.h"
 
+WINDOW *proc_win = NULL;
+
 void _init_colors() {
   start_color();
   init_pair(1, COLOR_RED, COLOR_YELLOW);
 }
 
-void init_display() {
+void display_init() {
   initscr();
-  _init_colors();
+  //_init_colors();
+  curs_set(0);
   refresh();
 }
 
-void destroy_display() {
+void display_destroy() {
   endwin();
 }
+
+// void display_scroll() {
+//   scroll(proc_win);
+//   wrefresh(proc_win);
+// }
 
 void print_error(const char* const str) {
   // TODO - clean this stuff up
@@ -30,13 +38,13 @@ void print_error(const char* const str) {
   int height = 3;
 
   WINDOW *err_win = newwin(height, width, starty, startx);
-  wbkgd(err_win, COLOR_PAIR(1));
+  //wbkgd(err_win, COLOR_PAIR(1));
   box(err_win, 0, 0);
   wprintw(err_win, "ERROR!");
   mvwprintw(err_win, 1, 3, str);
   wrefresh(err_win);
   getch();
-  destroy_display();
+  display_destroy();
 }
 
 void render_processes(struct kinfo_proc *processes, int count) {
@@ -46,7 +54,8 @@ void render_processes(struct kinfo_proc *processes, int count) {
   int height = LINES;
 
 
-  WINDOW *proc_win = newwin(height, width, startx, starty);
+  proc_win = newwin(height, width, startx, starty);
+  scrollok(proc_win, true);
   box(proc_win, 0, 0);
   wbkgd(proc_win, COLOR_PAIR(1));
 
@@ -61,16 +70,18 @@ void render_processes(struct kinfo_proc *processes, int count) {
    */
   mvwprintw(proc_win, 1, 1, "PID\tPRI\tNI\tS\tCommand");
 
-  for (int i = 0; i < 25; i++) {
-    mvwprintw(proc_win, i+2, 1, "%d\t%d\t%d\t%d\t%s",
+  for (int i = 0; i < count; i++) {
+    wprintw(proc_win, "%d\t%d\t%d\t%d\t%s\n",
       processes[i].kp_proc.p_pid,
       processes[i].kp_proc.p_priority,
       processes[i].kp_proc.p_nice,
       processes[i].kp_proc.p_stat,
       processes[i].kp_proc.p_comm
     );
+
+    wrefresh(proc_win);
   }
 
-  wrefresh(proc_win);
-	getch();
+  // TODO - is this what we want?
+  getch();
 }

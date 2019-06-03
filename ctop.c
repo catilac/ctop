@@ -6,11 +6,11 @@
  */
 
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
-#include <sys/sysctl.h>
-
 #include <string.h>
+#include <sys/sysctl.h>
+#include <unistd.h>
+#include <ncurses.h>
 
 #include "display.h"
 
@@ -20,15 +20,17 @@ int main(int argc, char **argv) {
   struct kinfo_proc *processes = NULL;
 
   // Init screen
-  init_display();
+  display_init();
 
   if (sysctl(mib, 4, NULL, &count, NULL, 0) < 0) {
     print_error("ERROR getting process COUNTS\n");
     return -1;
   }
 
-
 	// TODO - move this into its own module
+  if (processes != NULL) {
+    free(processes);
+  }
   processes = (struct kinfo_proc *)malloc(sizeof(struct kinfo_proc) * count);
 
   if (sysctl(mib, 4, processes, &count, NULL, 0) < 0) {
@@ -40,7 +42,7 @@ int main(int argc, char **argv) {
 
   render_processes(processes, count);
 
-  destroy_display();
+  display_destroy();
 
   // free up processes
   free(processes);

@@ -7,8 +7,10 @@
 
 #include <sys/sysctl.h>
 
-void init_display();
-void destroy_display();
+void display_init();
+void display_destroy();
+
+void display_scroll();
 
 void print_error(const char* const);
 void render_processes(struct kinfo_proc *, int);
