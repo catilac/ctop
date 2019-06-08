@@ -40,7 +40,15 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  render_processes(processes, count);
+  // create proc window
+  WINDOW *proc_win = display_create_window(LINES, COLS, 0, 0);
+
+  int offset = 0;
+  while (1) {
+    render_processes(proc_win, processes, count, offset);
+    offset++;
+    sleep(1);
+  }
 
   display_destroy();
 

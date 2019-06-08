@@ -1,6 +1,7 @@
 # ctop - an htop clone
 
 ## TODO
+  [ ] Need an actual window abstraction
   [ ] Scrolling using arrow keys (or vim commands?)
 
   [ ] Write datastructures for holding process information

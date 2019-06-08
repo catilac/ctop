@@ -7,8 +7,6 @@
 
 #include "display.h"
 
-WINDOW *proc_win = NULL;
-
 void _init_colors() {
   start_color();
   init_pair(1, COLOR_RED, COLOR_YELLOW);
@@ -16,7 +14,7 @@ void _init_colors() {
 
 void display_init() {
   initscr();
-  //_init_colors();
+  _init_colors();
   curs_set(0);
   refresh();
 }
@@ -24,11 +22,6 @@ void display_init() {
 void display_destroy() {
   endwin();
 }
-
-// void display_scroll() {
-//   scroll(proc_win);
-//   wrefresh(proc_win);
-// }
 
 void print_error(const char* const str) {
   // TODO - clean this stuff up
@@ -38,7 +31,7 @@ void print_error(const char* const str) {
   int height = 3;
 
   WINDOW *err_win = newwin(height, width, starty, startx);
-  //wbkgd(err_win, COLOR_PAIR(1));
+  wbkgd(err_win, COLOR_PAIR(1));
   box(err_win, 0, 0);
   wprintw(err_win, "ERROR!");
   mvwprintw(err_win, 1, 3, str);
@@ -47,18 +40,23 @@ void print_error(const char* const str) {
   display_destroy();
 }
 
-void render_processes(struct kinfo_proc *processes, int count) {
-  int startx = 0;
-  int starty = 0;
-  int width = COLS;
-  int height = LINES;
+WINDOW *display_create_window(int height, int width, int starty, int startx) {
+  WINDOW *win = newwin(height, width, starty, startx);
+  scrollok(win, true);
+  box(win, 0, 0);
+  wbkgd(win, COLOR_PAIR(1));
+  return win;
+}
 
+/* TODO Move this into a utils.h ? */
+int imin(int x, int y) {
+  if (x <= y)
+    return x;
+  return y;
+}
 
-  proc_win = newwin(height, width, startx, starty);
-  scrollok(proc_win, true);
-  box(proc_win, 0, 0);
-  wbkgd(proc_win, COLOR_PAIR(1));
-
+void render_processes(WINDOW *win, struct kinfo_proc *processes, 
+                      int count, int offset) {
   /* TODO
    *  [ ] user
    *  [ ] virt
@@ -68,10 +66,13 @@ void render_processes(struct kinfo_proc *processes, int count) {
    *  [ ] MEM%
    *  [ ] stat fmt
    */
-  mvwprintw(proc_win, 1, 1, "PID\tPRI\tNI\tS\tCommand");
 
-  for (int i = 0; i < count; i++) {
-    wprintw(proc_win, "%d\t%d\t%d\t%d\t%s\n",
+  mvwprintw(win, 1, 1, "PID\tPRI\tNI\tS\tCommand");
+  wrefresh(win);
+
+  int total = imin(LINES + offset - 3, count);
+  for (int i = offset, pos = 2; i < total; i++, pos++) {
+    mvwprintw(win, pos, 1, "%d\t%d\t%d\t%d\t%s\n",
       processes[i].kp_proc.p_pid,
       processes[i].kp_proc.p_priority,
       processes[i].kp_proc.p_nice,
@@ -79,9 +80,6 @@ void render_processes(struct kinfo_proc *processes, int count) {
       processes[i].kp_proc.p_comm
     );
 
-    wrefresh(proc_win);
+    wrefresh(win);
   }
-
-  // TODO - is this what we want?
-  getch();
 }
