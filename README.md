@@ -7,7 +7,7 @@
   [ ] Write datastructures for holding process information
     - sortable by different keys
 
-  [ ] Make sure we're shutting down gracefully
+  [x] Make sure we're shutting down gracefully -- signal handling
 
   [x] Write system calls to get list of processes
 
