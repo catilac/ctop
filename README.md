@@ -7,6 +7,8 @@
   [ ] Write datastructures for holding process information
     - sortable by different keys
 
+  [ ] Select processes to kill
+
   [x] Make sure we're shutting down gracefully -- signal handling
 
   [x] Write system calls to get list of processes
@@ -14,7 +16,7 @@
   [x] Create an ncurses based lib for creating a dashboard
     - needs to involve using WINDOW
 
-## What does this do?
+## What will this do?
 
 * HUD
   - Displays process information
